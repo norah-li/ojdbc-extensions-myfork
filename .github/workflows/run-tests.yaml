@@ -23,9 +23,13 @@ jobs:
           pwd
           ls
           mkdir -p ~/.azure
-          
+          # Generate certificate
           echo "${{ secrets.TEST_AZURE_CERTIFICATE }}" > ~/.azure/ojdbc-plugin-test-app.pem
+
+          # Convert .pem to .pfx file
+          openssl pkcs12 -export -in ${{ secrets.TEST_AZURE_CLIENT_CERTIFICATE_PATH }} -passout pass:${{ secrets.TEST_AZURE_CLIENT_PFX_PASSWORD }} -out ojdbc-provider-azure/ojdbc-provider-test-app.pfx
           
+          # Generate ojdbc-provider-azure/test.properties
           echo -e "OCI_CONFIG_FILE=${{ secrets.TEST_OCI_CONFIG_FILE }}\n" >> ojdbc-provider-oci/test.properties
           echo -e "AZURE_MANAGED_IDENTITY=false\n
           AZURE_CLIENT_PFX_CERTIFICATE_PATH=./ojdbc-provider-test-app.pfx\n" >> ojdbc-provider-azure/test.properties
@@ -35,5 +39,6 @@ jobs:
           echo "run tests step"
           mvn -B test --file pom.xml
       - name: Clean up
-        run: rm ~/.azure/ojdbc-plugin-test-app.pem
+        run: |
+          rm ~/.azure/ojdbc-plugin-test-app.pem
 
