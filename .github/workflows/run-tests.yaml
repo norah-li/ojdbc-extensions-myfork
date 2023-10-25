@@ -20,6 +20,7 @@ jobs:
       - name: Prepare certificate and properties files
         run: |
           echo "prepare step"
+          echo -e "OCI_CONFIG_FILE=${{ secrets.TEST_OCI_CONFIG_FILE }}\n" >> ojdbc-provider-oci/test.properties
           
       - name: Run tests with Maven
         run: |
