@@ -23,6 +23,11 @@ jobs:
           pwd
           ls
           mkdir -p ~/.azure
+          if [-d ~/.azure ]; then
+            echo "Directory ~/.azure exists"
+          else
+            echo "Directory ~/.azure does not exists"
+          fi
           
           if [[ -f "ojdbc-provider-azure/test.properties" ]]; then
             echo "File azure/test.properties exists."
@@ -64,6 +69,12 @@ jobs:
           AZURE_KEY_VAULT_URL=${{ secrets.TEST_AZURE_KEY_VAULT_URL }}\n
           AZURE_KEY_VAULT_SECRET_NAME=${{ secrets.TEST_AZURE_KEY_VAULT_SECRET_NAME }}\n
           " >> ojdbc-provider-azure/test.properties
+
+          if [[ -f "ojdbc-provider-azure/test.properties" ]]; then
+            echo "File azure/test.properties exists."
+          else
+            echo "File azure/test.properties does not exist."
+          fi
           
       - name: Run tests with Maven
         run: |
