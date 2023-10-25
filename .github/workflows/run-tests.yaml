@@ -23,6 +23,7 @@ jobs:
           pwd
           ls
           echo -e "OCI_CONFIG_FILE=${{ secrets.TEST_OCI_CONFIG_FILE }}\n" >> ojdbc-provider-oci/test.properties
+          echo -e "AZURE_MANAGED_IDENTITY=false\n" >> ojdbc-provider-azure/test.properties
           
       - name: Run tests with Maven
         run: |
