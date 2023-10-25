@@ -22,11 +22,11 @@ jobs:
           echo "prepare step"
           pwd
           ls
-          mkdir -p ~/.azure
-          if [-d ~/.azure ]; then
-            echo "Directory ~/.azure exists"
+          mkdir -p $HOME/.azure
+          if [-d $HOME/.azure ]; then
+            echo "Directory $HOME/.azure exists"
           else
-            echo "Directory ~/.azure does not exists"
+            echo "Directory $HOME/.azure does not exists"
           fi
           
           if [[ -f "ojdbc-provider-azure/test.properties" ]]; then
@@ -36,9 +36,9 @@ jobs:
           fi
           
           # Generate certificate
-          echo "${{ secrets.TEST_AZURE_CERTIFICATE }}" > ~/.azure/ojdbc-plugin-test-app.pem
+          echo "${{ secrets.TEST_AZURE_CERTIFICATE }}" > $HOME/.azure/ojdbc-plugin-test-app.pem
 
-          if [[ -f "~/.azure/ojdbc-plugin-test-app.pem" ]]; then
+          if [[ -f "$HOME/.azure/ojdbc-plugin-test-app.pem" ]]; then
             echo "File .azure/.pem exists."
           else
             echo "File .azure/.pem does not exist."
@@ -82,7 +82,7 @@ jobs:
           mvn -B test --file pom.xml
       - name: Clean up
         run: |
-          rm ~/.azure/ojdbc-plugin-test-app.pem
+          rm $HOME/.azure/ojdbc-plugin-test-app.pem
           rm ojdbc-provider-azure/ojdbc-provider-test-app.pfx
 
           rm ojdbc-provider-azure/test.properties
