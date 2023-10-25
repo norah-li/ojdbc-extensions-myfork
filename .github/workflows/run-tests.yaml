@@ -28,7 +28,7 @@ jobs:
             echo "File azure/test.properties exists."
           else
             echo "File azure/test.properties does not exist."
-          endif
+          fi
           
           # Generate certificate
           echo "${{ secrets.TEST_AZURE_CERTIFICATE }}" > ~/.azure/ojdbc-plugin-test-app.pem
@@ -37,7 +37,7 @@ jobs:
             echo "File .azure/.pem exists."
           else
             echo "File .azure/.pem does not exist."
-          endif
+          fi
 
           # Convert .pem to .pfx file
           openssl pkcs12 -export -in ${{ secrets.TEST_AZURE_CLIENT_CERTIFICATE_PATH }} -passout pass:${{ secrets.TEST_AZURE_CLIENT_PFX_PASSWORD }} -out ojdbc-provider-azure/ojdbc-provider-test-app.pfx
@@ -46,7 +46,7 @@ jobs:
             echo "File azure/.pfx exists."
           else
             echo "File azure/.pfx does not exist."
-          endif
+          fi
           
           # Generate ojdbc-provider-azure/test.properties
           echo -e "OCI_CONFIG_FILE=${{ secrets.TEST_OCI_CONFIG_FILE }}\n" >> ojdbc-provider-oci/test.properties
