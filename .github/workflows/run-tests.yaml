@@ -23,7 +23,7 @@ jobs:
           pwd
           ls
           mkdir -p $HOME/.azure
-          if [-d $HOME/.azure ]; then
+          if [ -d $HOME/.azure ]; then
             echo "Directory $HOME/.azure exists"
           else
             echo "Directory $HOME/.azure does not exists"
