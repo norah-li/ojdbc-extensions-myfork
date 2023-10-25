@@ -23,11 +23,30 @@ jobs:
           pwd
           ls
           mkdir -p ~/.azure
+          
+          if [[ -f "ojdbc-provider-azure/test.properties" ]]; then
+            echo "File azure/test.properties exists."
+          else
+            echo "File azure/test.properties does not exist."
+          endif
+          
           # Generate certificate
           echo "${{ secrets.TEST_AZURE_CERTIFICATE }}" > ~/.azure/ojdbc-plugin-test-app.pem
 
+          if [[ -f "~/.azure/ojdbc-plugin-test-app.pem" ]]; then
+            echo "File .azure/.pem exists."
+          else
+            echo "File .azure/.pem does not exist."
+          endif
+
           # Convert .pem to .pfx file
           openssl pkcs12 -export -in ${{ secrets.TEST_AZURE_CLIENT_CERTIFICATE_PATH }} -passout pass:${{ secrets.TEST_AZURE_CLIENT_PFX_PASSWORD }} -out ojdbc-provider-azure/ojdbc-provider-test-app.pfx
+
+          if [[ -f "ojdbc-provider-azure/ojdbc-provider-test-app.pfx" ]]; then
+            echo "File azure/.pfx exists."
+          else
+            echo "File azure/.pfx does not exist."
+          endif
           
           # Generate ojdbc-provider-azure/test.properties
           echo -e "OCI_CONFIG_FILE=${{ secrets.TEST_OCI_CONFIG_FILE }}\n" >> ojdbc-provider-oci/test.properties
