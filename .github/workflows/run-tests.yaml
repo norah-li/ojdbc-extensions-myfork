@@ -60,7 +60,7 @@ jobs:
           
           # Generate ojdbc-provider-oci/test.properties
           echo -e "OCI_CONFIG_FILE=${{ secrets.TEST_OCI_CONFIG_FILE }}\n
-          OCI_CONFIG_PROFILE=OJDBC-PLUGIN-TEST\n
+          OCI_CONFIG_PROFILE=DEFAULT\n
           OCI_CLOUD_SHELL=false\n
           OCI_INSTANCE_PRINCIPAL=false\n
           OCI_RESOURCE_PRINCIPAL=false\n
