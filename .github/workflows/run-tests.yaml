@@ -24,8 +24,8 @@ jobs:
       - name: Intsall dependencies
         run: mvn install -DskipTests
         
-      - name: Print classpath
-        run: mvn dependency:build-classpath -Dmdep.outoutFile=classpath.txt && cat classpath.txt
+      #- name: Print classpath
+      #  run: mvn dependency:build-classpath -Dmdep.outoutFile=classpath.txt && cat classpath.txt
           
       - name: Prepare certificate and properties files
         run: |
