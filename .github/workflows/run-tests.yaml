@@ -20,6 +20,9 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+
+      - name: Print classpath
+        run: mvn dependency:build-classpath -Dmdep.outoutFile=classpath.txt && cat classpath.txt
           
       - name: Prepare certificate and properties files
         run: |
@@ -29,10 +32,29 @@ jobs:
           mkdir -p $HOME/.azure
           mkdir -p $HOME/.oci
 
+          echo "${{ secrets.TEST_AZURE_CERTIFICATE }}" > $HOME/.azure/ojdbc-plugin-test-app.pem
+          
           # Generate oci config
           echo -e "${{ secrets.TEST_OCI_API_KEY }}" > ~/.oci/oci-api-key.pem
           echo -e "${{ secrets.TEST_OCI_CONGIF_PROFILE }}" > ~/.oci/config
 
+          openssl pkcs12 -export -in ${{ secrets.TEST_AZURE_CLIENT_CERTIFICATE_PATH }} -passout pass:${{ secrets.TEST_AZURE_CLIENT_PFX_PASSWORD }} -out ojdbc-provider-azure/ojdbc-provider-test-app.pfx
+
+          echo -e "AZURE_MANAGED_IDENTITY=false\n
+          AZURE_TENANT_ID=${{ secrets.TEST_AZURE_TENANT_ID }}\n
+          AZURE_CLIENT_ID=${{ secrets.TEST_AZURE_CLIENT_ID }}\n
+          AZURE_CLIENT_SECRET=${{ secrets.TEST_AZURE_CLIENT_SECRET }}\n
+          AZURE_CLIENT_CERTIFICATE_PATH=${{ secrets.TEST_AZURE_CLIENT_CERTIFICATE_PATH }}\n
+          AZURE_CLIENT_PFX_CERTIFICATE_PATH=./ojdbc-provider-test-app.pfx\n
+          AZURE_CLIENT_PFX_PASSWORD=${{ secrets.TEST_AZURE_CLIENT_PFX_PASSWORD }}\n
+          AZURE_TOKEN_SCOPE=${{ secrets.TEST_AZURE_TOKEN_SCOPE }}\n
+          AZURE_APP_CONFIG_NAME=${{ secrets.TEST_AZURE_APP_CONFIG_NAME }}\n
+          AZURE_APP_CONFIG_KEY=${{ secrets.TEST_AZURE_APP_CONFIG_KEY }}\n
+          AZURE_APP_CONFIG_LABEL=${{ secrets.TEST_AZURE_APP_CONFIG_LABEL }}\n
+          AZURE_KEY_VAULT_URL=${{ secrets.TEST_AZURE_KEY_VAULT_URL }}\n
+          AZURE_KEY_VAULT_SECRET_NAME=${{ secrets.TEST_AZURE_KEY_VAULT_SECRET_NAME }}\n
+          " >> ojdbc-provider-azure/test.properties
+          
           # Generate ojdbc-provider-oci/test.properties
           echo -e "OCI_CONFIG_FILE=${{ secrets.TEST_OCI_CONFIG_FILE }}\n
           OCI_CONFIG_PROFILE=OJDBC-PLUGIN-TEST\n
@@ -69,9 +91,9 @@ jobs:
         run: |
           rm ~/.oci/oci-api-key.pem
           rm ~/.oci/config
+          rm ojdbc-provider-oci/test.properties
            
-          #rm $HOME/.azure/ojdbc-plugin-test-app.pem
-          #rm ojdbc-provider-azure/ojdbc-provider-test-app.pfx
-
-          #rm ojdbc-provider-azure/test.properties
+          rm $HOME/.azure/ojdbc-plugin-test-app.pem
+          rm ojdbc-provider-azure/ojdbc-provider-test-app.pfx
+          rm ojdbc-provider-azure/test.properties
 
