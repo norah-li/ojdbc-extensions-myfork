@@ -44,9 +44,7 @@ public class OciDatabaseToolsConnectionProviderTest {
 
   static {
     try {
-      ConfigFileReader.ConfigFile configFile = ConfigFileReader.parse(TestProperties.getOrAbort(
-        OciTestProperty.OCI_CONFIG_FILE), TestProperties.getOrAbort(
-        OciTestProperty.OCI_CONFIG_PROFILE));
+      ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
       AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(
           configFile);
 
