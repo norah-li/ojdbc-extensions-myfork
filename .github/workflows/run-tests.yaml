@@ -20,7 +20,10 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-
+          
+      - name: Intsall dependencies
+        run: mvn install -DskipTests
+        
       - name: Print classpath
         run: mvn dependency:build-classpath -Dmdep.outoutFile=classpath.txt && cat classpath.txt
           
@@ -76,17 +79,30 @@ jobs:
           else
             echo "Directory $HOME/.oci does not exists"
           fi
+
+          if [ -d $HOME/.azure ]; then
+            echo "Directory $HOME/.azure exists"
+          else
+            echo "Directory $HOME/.azure does not exists"
+          fi
           
           if [[ -f "ojdbc-provider-oci/test.properties" ]]; then
             echo "File oci/test.properties exists."
           else
             echo "File oci/test.properties does not exist."
           fi
+
+          if [[ -f "ojdbc-provider-azure/test.properties" ]]; then
+            echo "File azure/test.properties exists."
+          else
+            echo "File azure/test.properties does not exist."
+          fi
           
       - name: Run tests with Maven
         run: |
           echo "run tests step"
           mvn -B test --file pom.xml
+          
       - name: Clean up
         run: |
           rm ~/.oci/oci-api-key.pem
